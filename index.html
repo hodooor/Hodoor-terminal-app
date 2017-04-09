@@ -30,15 +30,25 @@
       <table>
         <tr>
           <td>
-            <span>server: </span><span>hodoor.eledus.cz</span>
-            <br/>
-            <span>status: </span><span>online</span>
+            <div>
+              <span>server: </span><span class="server-url">hodoor.eledus.cz</span>
+              <br/>
+              <span>status: </span><span class="server-status">online</span>
+            </div>
           </td>
           <td>
-
+            <div class="code-activated">
+              <span>Time: </span><span class="time"></span>
+              <br />
+              <span>Date: </span><span class="date"></span>
+            </div>
           </td>
           <td>
-
+            <div class="code-activated primary">
+              <span>User: </span><span class="">Patrik Predný</span>
+              <br />
+              <span>Code: </span><span class="">000557889 RFID</span>
+            </div>
           </td>
         </tr>
       </table>
@@ -57,7 +67,7 @@
           </ul>
           <div class="hide-last-swipes-after">
             <span>This menu will hide after: </span>
-            <span id="hide-last-swipes-after">5</span>
+            <span id="hide-last-swipes-after"></span>
             <span> seconds</span>
           </div>
         </div>
@@ -65,10 +75,38 @@
     </div>
 
     <div class="subblock-center">
-      <span class="codescan-text">Scan your code please...</span>
+      <span class="info-text">Scan your code please...</span>
       <span class="time">15:48:05</span>
       <span class="date">Tue 21.03.2017</span>
     </div>
+
+    <div class="subblock-center-buttons">
+      <span class="info-text">Please select swipe type</span>
+      <div class="button-block">
+        <a href="#" class="button">
+          <i class="fa fa-coffee"></i>
+          <br />
+          Break
+        </a>
+        <a href="#" class="button">
+          <i class="fa fa-suitcase"></i>
+          <br />
+          Trip
+        </a>
+        <a href="#" class="button">
+          <i class="fa fa-sign-out"></i>
+          <br />
+          outgo
+        </a>
+      </div>
+      <span class="info-text-inline">Automatic swipe logout in
+        <span class="logout-time-text"></span>
+         sec.
+      </span>
+      <a href="#" class="button-danger exit-button">Exit</a>
+
+    </div>
+
   </div>
 
 </div>
