@@ -64,7 +64,11 @@ h1 {
     height: 50px;
     font-size: 14px;
     table tr td {
-      width: 220px;
+      width: 180px;
+    }
+    .table-bordered {
+      border-left: 1px solid #ccc;
+      padding-left: 3px;
     }
     #sliding-menu {
       text-align: center;
@@ -195,18 +199,22 @@ h1 {
     padding-top: 60px;
     #last-swipes-content {
       display: none;
+      overflow: hidden;
     }
     .last-swipes-heading {
       font-size: 28px;
       padding-left: 25px;
     }
     .last-swipes-list {
-      margin-top: 30px;
+      margin-top: 15px;
       height: 420px; //was 280
       max-height: 280px !important;
       list-style-type: none;
       font-size: 16px;
       color: #ccc;
+      li {
+        padding-bottom: 8px;
+      }
     }
     .hide-last-swipes-after {
       color: #aaa;

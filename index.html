@@ -31,9 +31,9 @@
         <tr>
           <td>
             <div>
-              <span>server: </span><span class="server-url">hodoor.eledus.cz</span>
+              <span>server: </span><span class="server-url"></span>
               <br/>
-              <span>status: </span><span class="server-status">online</span>
+              <span>status: </span><span class="server-status"></span>
             </div>
           </td>
           <td>
@@ -45,9 +45,16 @@
           </td>
           <td>
             <div class="code-activated primary">
-              <span>User: </span><span class="">Patrik Predný</span>
+              <span>User: </span><span class="user">Patrik Predný</span>
               <br />
-              <span>Code: </span><span class="">000557889 RFID</span>
+              <span>Code: </span><span class="key">000557889 RFID</span>
+            </div>
+          </td>
+          <td>
+            <div class="code-activated primary">
+              <span>User status: </span><span class="user-status">At work</span>
+              <br />
+              <span>Hours: </span><span class="user-hours">66.24 Hours</span>
             </div>
           </td>
         </tr>
@@ -61,9 +68,7 @@
         <div id="last-swipes-content">
           <span class="last-swipes-heading">Last swipes</span>
           <ul class="last-swipes-list">
-            <li><i class="fa fa-sign-in"></i> Wed 10:35:21 Patrik Predný</li>
-            <li><i class="fa fa-sign-out"></i> Wed 10:35:21 Patrik Predný</li>
-            <li><i class="fa fa-coffee"></i> Wed 10:35:21 Patrik Predný</li>
+            <!--<li><i class="fa fa-sign-in"></i> Wed 10:35:21 Patrik Predný</li>-->
           </ul>
           <div class="hide-last-swipes-after">
             <span>This menu will hide after: </span>
@@ -112,7 +117,8 @@
 </div>
 </body>
 <script>
-  require('./renderer.js')
-  require('./js/functions.js')
+  require('./renderer.js');
+  require('./js/functions.js');
+  require('./index.js');
 </script>
 </html>

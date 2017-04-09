@@ -69,6 +69,7 @@ $(document).ready(function(){
       $('#block-codescan .subblock-center-buttons').show();
       $('.code-activated').show();
       $('.info-text-inline').hide();
+      $('.code-activated').addClass('table-bordered');
       if(autoLogoutAfter != 'none') {
         autoLogoutAfterTimeInterval = setInterval(function () {
           $('.logout-time-text').text(autoLogoutAfter--);
@@ -81,8 +82,8 @@ $(document).ready(function(){
         }, 1000);
       }
   }
-  SystemCodeOK(15);
-
+  //SystemCodeOK(15);
+  SystemCodeScan();
 
   /*slide-menu for last swipes*/
   var toggleState = 0;
@@ -90,7 +91,7 @@ $(document).ready(function(){
   var TimeOut, TimeInterval;
   function ShowLastSwipesMenu() {
     $('#last-swipes').css('width','350px');
-      $('#last-swipes-content').fadeIn('slow');
+      $('#last-swipes-content').fadeIn('fast');
     $('.arrow-icon').removeClass('fa-arrow-left').addClass('fa-arrow-right');
     TimeInterval = setInterval(function(){
       HideLastSwipesMenuAfterText--;
