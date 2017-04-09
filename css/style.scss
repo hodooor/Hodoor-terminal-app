@@ -120,17 +120,19 @@ h1 {
         display: inline-block;
         padding: 10px;
         margin: 15px;
-        border: 3px solid $primary;
+        border: 3px solid $white;
         text-decoration: none;
         text-align: center;
-        color: $primary;
+        color: $white;
+        background: lighten($primary,5%);
         font-size: 30px;
         overflow: hidden;
         text-overflow: ellipsis;
         &:hover, &:focus {
-          border-color: $white;
-          background: lighten($primary,5%);
-          color: $white;
+          border-color: $primary;
+          //background: lighten($primary,5%);
+          background: none;
+          color: $primary;
         }
       }
     }
@@ -166,12 +168,15 @@ h1 {
       text-decoration: none;
       text-align: center;
       color: $white;
+      background: lighten($danger,5%);
       font-size: 30px;
       overflow: hidden;
       text-overflow: ellipsis;
       &:hover, &:focus {
         border-color: $white;
-        background: lighten($danger,5%);
+        //background: lighten($danger,5%);
+        color: $danger;
+        background: none;
       }
     }
   }
@@ -197,7 +202,7 @@ h1 {
     }
     .last-swipes-list {
       margin-top: 30px;
-      height: 280px;
+      height: 420px; //was 280
       max-height: 280px !important;
       list-style-type: none;
       font-size: 16px;
@@ -206,7 +211,7 @@ h1 {
     .hide-last-swipes-after {
       color: #aaa;
       position: absolute;
-      bottom: 40px;
+      bottom: 80px; //was 40
       right: 55px;
       text-align: center;
     }
