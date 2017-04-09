@@ -123,14 +123,14 @@ h1 {
         border: 3px solid $primary;
         text-decoration: none;
         text-align: center;
-        color: $white;
+        color: $primary;
         font-size: 30px;
         overflow: hidden;
         text-overflow: ellipsis;
         &:hover, &:focus {
           border-color: $white;
-          background: lighten($primary,25%);
-          //color: $primary;
+          background: lighten($primary,5%);
+          color: $white;
         }
       }
     }
@@ -151,7 +151,28 @@ h1 {
       padding: none;
       margin: none;
       display: block;
-      margin-top: 35px;
+      margin-top: 25px;
+    }
+    .button-danger {
+      width: 575px;
+      height: 30px;
+      display: inline-block;
+      padding: 10px;
+      padding-top: 0px;
+      position: absolute;
+      left: 78px;
+      margin: 15px;
+      border: 3px solid $danger;
+      text-decoration: none;
+      text-align: center;
+      color: $white;
+      font-size: 30px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &:hover, &:focus {
+        border-color: $white;
+        background: lighten($danger,5%);
+      }
     }
   }
 }

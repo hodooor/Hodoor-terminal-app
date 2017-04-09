@@ -5,6 +5,9 @@ $(document).ready(function(){
     $('#content').fadeIn('slow');
   });
 
+  /*Define variables and constants*/
+  var timeoutinterval = 10;
+
   /*auto-clock update*/
   function updateClock() {
     var currentDateTime = new Date(), // current date
@@ -41,13 +44,49 @@ $(document).ready(function(){
   updateClock(); //Update Clock
   updateDate(); //Update Date
 
-  /*offline block hide / show*/
-  $('#block-offline').hide();
-  $('#block-codescan .subblock-center').hide();
+  /*Hide/Show functions*/
+  /*Initialise - do not display*/
+    $('#block-offline').css('display', 'none');
+    $('#block-codescan').css('display', 'none');
+  /*Hide/Show functions*/
+  function SystemOffline() {
+    console.log('I am in offline mode');
+      $('#block-offline').fadeIn();
+  }
+  function SystemCodeScan() {
+    console.log('I am in code scan mode');
+      $('#block-codescan').fadeIn();
+      $('#block-codescan .subblock-center-buttons').hide();
+      $('#block-codescan .subblock-center').show();
+      $('.code-activated').hide();
+  }
+  var autoLogoutAfter;
+  var autoLogoutAfterTimeInterval;
+  function SystemCodeOK(autoLogoutAfter) {
+    console.log('I am in code scaned DONE mode');
+      $('#block-codescan').fadeIn();
+      $('#block-codescan .subblock-center').hide();
+      $('#block-codescan .subblock-center-buttons').show();
+      $('.code-activated').show();
+      $('.info-text-inline').hide();
+      if(autoLogoutAfter != 'none') {
+        autoLogoutAfterTimeInterval = setInterval(function () {
+          $('.logout-time-text').text(autoLogoutAfter--);
+          $('.info-text-inline').show();
+          if (autoLogoutAfter == -1) {
+            clearInterval(autoLogoutAfterTimeInterval);
+            console.log('going to scan mode');
+            return SystemCodeScan();
+          }
+        }, 1000);
+      }
+  }
+  SystemCodeOK(15);
+
 
   /*slide-menu for last swipes*/
   var toggleState = 0;
-  var HideLastSwipesMenuAfterText = 5;
+  var HideLastSwipesMenuAfterText = timeoutinterval;
   var TimeOut, TimeInterval;
   function ShowLastSwipesMenu() {
     $('#last-swipes').css('width','350px');
@@ -63,13 +102,13 @@ $(document).ready(function(){
       $('#last-swipes').css('width','0px');
     $('.arrow-icon').removeClass('fa-arrow-right').addClass('fa-arrow-left');
     clearInterval(TimeInterval);
-    HideLastSwipesMenuAfterText = 5;
+    HideLastSwipesMenuAfterText = timeoutinterval;
   }
   $('.menu-btn').on('click', function(){
     if(!toggleState) {
         ShowLastSwipesMenu();
         toggleState=1;
-        TimeOut = setTimeout(function(){HideLastSwipesMenu();}, 1000*1*5); //5seconds
+        TimeOut = setTimeout(function(){HideLastSwipesMenu();}, 1000*1*timeoutinterval); //n-seconds
     } else {
         HideLastSwipesMenu();
         toggleState=0;
