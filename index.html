@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hodoor RasPi Terminal</title>
+  <link rel="stylesheet" type="text/css" href="css/style.min.css" />
+  <link rel="stylesheet" type="text/css" href="modules/fontawesome/css/font-awesome.min.css" />
+  <!-- Insert this line above script imports  -->
+  <script>if (typeof module === 'object')
+    {
+      window.module = module; module = undefined;
+    }
+  </script>
+  <!-- normal script imports etc  -->
+  <script src="js/jquery-3.1.1.min.js"></script>
+  <!-- Insert this line after script imports -->
+  <script>if (window.module) module = window.module;</script>
+</head>
+<body>
+<div id="loader" class="loader"></div>
+<div id="content" style="display:none;">
+  <!---->
+  <div id="block-offline">
+    <h1 class="offline-text">Offline</h1>
+    <p class="offline-text-span">wait please...</p>
+  </div>
+  <!---->
+  <div id="block-codescan">
+    <div class="subblock-top">
+      <table>
+        <tr>
+          <td>
+            <span>server: </span><span>hodoor.eledus.cz</span>
+            <br/>
+            <span>status: </span><span>online</span>
+          </td>
+          <td>
+
+          </td>
+          <td>
+
+          </td>
+        </tr>
+      </table>
+      <div id="sliding-menu">
+        <a class="menu-btn">
+          <i class="arrow-icon fa fa-arrow-left"></i>
+        </a>
+      </div>
+      <div id="last-swipes" class="sidenav">
+        <div id="last-swipes-content">
+          <span class="last-swipes-heading">Last swipes</span>
+          <ul class="last-swipes-list">
+            <li><i class="fa fa-sign-in"></i> Wed 10:35:21 Patrik Predný</li>
+            <li><i class="fa fa-sign-out"></i> Wed 10:35:21 Patrik Predný</li>
+            <li><i class="fa fa-coffee"></i> Wed 10:35:21 Patrik Predný</li>
+          </ul>
+          <div class="hide-last-swipes-after">
+            <span>This menu will hide after: </span>
+            <span id="hide-last-swipes-after">5</span>
+            <span> seconds</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subblock-center">
+      <span class="codescan-text">Scan your code please...</span>
+      <span class="time">15:48:05</span>
+      <span class="date">Tue 21.03.2017</span>
+    </div>
+  </div>
+
+</div>
+</body>
+<script>
+  require('./renderer.js')
+  require('./js/functions.js')
+</script>
+</html>
