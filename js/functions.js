@@ -43,6 +43,7 @@ $(document).ready(function(){
 
   /*offline block hide / show*/
   $('#block-offline').hide();
+  $('#block-codescan .subblock-center').hide();
 
   /*slide-menu for last swipes*/
   var toggleState = 0;
@@ -68,7 +69,7 @@ $(document).ready(function(){
     if(!toggleState) {
         ShowLastSwipesMenu();
         toggleState=1;
-        //TimeOut = setTimeout(function(){HideLastSwipesMenu();}, 1000*1*5); //5seconds
+        TimeOut = setTimeout(function(){HideLastSwipesMenu();}, 1000*1*5); //5seconds
     } else {
         HideLastSwipesMenu();
         toggleState=0;
