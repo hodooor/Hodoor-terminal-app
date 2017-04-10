@@ -78,6 +78,7 @@ function SystemCodeOK(autoLogoutAfter) {
       }, 1000);
     }
 }
+exports.SystemCodeOK = SystemCodeOK;
 //SystemCodeOK(15);
 //SystemCodeScan();
 var SystemCodeScan = function() {

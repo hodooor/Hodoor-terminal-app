@@ -11,7 +11,15 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 var cancel_timer;
 
+var terminalServerUrl = $('.subblock-top .server-url');
+var terminalServerStatus = $('.subblock-top .server-status');
+
 var terminalInfoText = $('.subblock-center .info-text');
+var terminalUserName = $('.subblock-top .user');
+var terminalUserKey= $('.subblock-top .key');
+
+var terminalUserStatus = $('.subblock-top .user-status');
+var terminalUserHours = $('.subblock-top .user-hours');
 
 var keysFromServer = function(){
     var user_keys;
@@ -80,18 +88,15 @@ var keysFromServer = function(){
                     {
                         //document.getElementById("status").style.color = "#EC3F8C"; //PPR
                     }
-///pokracuj zde
-                    document.getElementById("keynumber").innerHTML = "Key: " + current_user.key_type + " " + current_user.id; //PPR
-                    document.getElementById("status").innerHTML = "Status: " + status_string; //PPR
-                    document.getElementById("name").innerHTML = "User: " + current_user.user.username; //PPR
-                    document.getElementById("hours_this_month").innerHTML = "This Month: " + current_user.user.hours_this_month.toFixed(2) + " Hours"; //PPR
-                    document.getElementById("name").style.visibility = "visible"; //PPR
-                    document.getElementById("status").style.visibility = "visible"; //PPR
-                    document.getElementById("keynumber").style.visibility = "visible"; //PPR
-                    document.getElementById("hours_this_month").style.visibility = "visible"; //PPR
+                    terminal.SystemCodeOK('none'); //call another mode
+                    /*set values to see in terminal*/
+                    terminalUserKey.text(current_user.id+" "+current_user.key_type);
+                    terminalUserName.text(current_user.user.username);
+                    terminalUserHours.text(current_user.user.hours_this_month.toFixed(2)+' Hours');
+                    terminalUserStatus.text(status_string);
 
-
-                    disableAllButtons(); //PPR  - nahradit strukturou skryvania buttons new
+                    //disableAllButtons(); //PPR  - nahradit strukturou skryvania buttons new
+/*
                     switch(current_user.user.last_swipe.swipe_type){
                     case "IN":
                         enableButtons(IN_BUTTONS); //PPR tady jen if tak visible
@@ -122,7 +127,7 @@ var keysFromServer = function(){
                     default:
                         console.log("Error default")
                     break;
-                    }
+                  }*/
                     cancel_timer = setTimeout(function(){ //PPR - return SystemCodeScan
                             logOut();
                         },10000 //PPR  after 10sec - nastavim promennou
