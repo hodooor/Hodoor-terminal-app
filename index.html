@@ -88,27 +88,42 @@
     <div class="subblock-center-buttons">
       <span class="info-text">Please select swipe type</span>
       <div class="button-block">
-        <a href="#" class="button">
+        <a id="btnIN" href="#" class="button">
+          <i class="fa fa-sign-in"></i>
+          <br />
+          Incoming
+        </a>
+        <a id="btnBREAK" href="#" class="button">
           <i class="fa fa-coffee"></i>
           <br />
           Break
         </a>
-        <a href="#" class="button">
+        <a id="btnTRIP" href="#" class="button">
           <i class="fa fa-suitcase"></i>
           <br />
           Trip
         </a>
-        <a href="#" class="button">
+        <a id="btnOUT" href="#" class="button">
           <i class="fa fa-sign-out"></i>
           <br />
-          outgo
+          Outgoing
+        </a>
+        <a id="btnTRIPOUT" href="#" class="button">
+          <i class="fa fa-share-square"></i>
+          <br />
+          Trip Return
+        </a>
+        <a id="btnBREAKOUT" href="#" class="button">
+          <i class="fa fa-clock-o"></i>
+          <br />
+          Break Return
         </a>
       </div>
       <span class="info-text-inline">Automatic swipe logout in
         <span class="logout-time-text"></span>
          sec.
       </span>
-      <a href="#" class="button-danger exit-button">Exit</a>
+      <a id="btnEXIT" href="#" class="button-danger exit-button">Exit</a>
 
     </div>
 
@@ -118,7 +133,6 @@
 </body>
 <script>
   require('./renderer.js');
-  //require('./js/functions.js');
   require('./index.js');
 </script>
 </html>

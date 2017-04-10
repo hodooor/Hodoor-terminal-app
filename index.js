@@ -4,11 +4,10 @@ var settings = require("./settings.json"); //for token and url get
 let terminal = require('./js/functions.js');
 var $ = require('jquery');
 
-/*Buttons deppends on last swipe type*/
-//PPR button logic - jaky swipe kdy
-
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
+var swipelen = 10; //nuber of swipes to see in left sliding list
+var logoutTime = 5; //15sec to logout
 var cancel_timer;
 
 var terminalServerUrl = $('.subblock-top .server-url');
@@ -20,6 +19,10 @@ var terminalUserKey= $('.subblock-top .key');
 
 var terminalUserStatus = $('.subblock-top .user-status');
 var terminalUserHours = $('.subblock-top .user-hours');
+
+var terminalButtonsInfoText = $('.subblock-center-buttons .info-text');
+
+terminal.loaderOn(); //run CSS/JS loader
 
 var keysFromServer = function(){
     var user_keys;
@@ -37,6 +40,7 @@ var keysFromServer = function(){
                     if (!error && response.statusCode == 200) {
                         user_keys = JSON.parse(body);
                         console.log("User keys loaded from server " + URL );
+                        terminal.loaderOff();
                         terminal.SystemCodeScan();
                         updateSwipeList();
                     }
@@ -54,7 +58,6 @@ var keysFromServer = function(){
                     }
                     $('.server-status').text('online');
                 })
-
         },
         getAll: function(){return user_keys;},
         /* Loads current user to current_user variable from downloaded
@@ -78,8 +81,8 @@ var keysFromServer = function(){
                     current_user = filtered[0];
                     console.log("Loaded user: "); //PPR
                     console.log(current_user); //PPR
-                    userstring.text("Key Verified");
-                    userstring.css('color',"#1FD26A");
+                    userstring.text("Key verified");
+                    //userstring.css('color',"#1FD26A");
                     var status_string = getLastActionString(current_user.user.last_swipe.swipe_type);
                     if(status_string === "At Work"){ //PPR
                         //document.getElementById("status").style.color = "#1FD26A"; //PPR
@@ -88,7 +91,7 @@ var keysFromServer = function(){
                     {
                         //document.getElementById("status").style.color = "#EC3F8C"; //PPR
                     }
-                    terminal.SystemCodeOK('none'); //call another mode
+                    terminal.SystemCodeOK(logoutTime); //call another mode
                     /*set values to see in terminal*/
                     terminalUserKey.text(current_user.id+" "+current_user.key_type);
                     terminalUserName.text(current_user.user.username);
@@ -128,21 +131,24 @@ var keysFromServer = function(){
                         console.log("Error default")
                     break;
                   }*/
-                    cancel_timer = setTimeout(function(){ //PPR - return SystemCodeScan
-                            logOut();
-                        },10000 //PPR  after 10sec - nastavim promennou
-                    )
+                  cancel_timer = setTimeout(function() {
+                       logOut();
+                    },(logoutTime+1.5)*1000)
                 }
                 else{ //PPR - zmenit pote cele
                     current_user = undefined;
                     console.log("Wrong key!");
-                    userstring.innerHTML = "Wrong Key!";
-                    userstring.style.color = "#EC3F8C"
-                    document.getElementById("name").style.visibility = "hidden";
-                    document.getElementById("status").style.visibility = "hidden";
-                    document.getElementById("keynumber").style.visibility = "hidden";
-                    document.getElementById("hours_this_month").style.visibility = "hidden";
-                    disableAllButtons();
+                    userstring.text("Wrong Key!");
+                    //userstring.style.color = "#EC3F8C"
+                    //document.getElementById("name").style.visibility = "hidden";
+                    //document.getElementById("status").style.visibility = "hidden";
+                    //document.getElementById("keynumber").style.visibility = "hidden";
+                    //document.getElementById("hours_this_month").style.visibility = "hidden";
+                    //disableAllButtons();
+                    setTimeout(function () {
+                      resetAll();
+                      terminal.SystemCodeScan();
+                    }, 1500);
                 }
             }
             else{
@@ -154,7 +160,7 @@ var keysFromServer = function(){
         unloadUser: function(){
             current_user = undefined;
             document.getElementById("userstring").innerHTML = "Scan your key..."; //PPR zmenit na celou fci
-            document.getElementById("userstring").style.color = "#FAF9F4"; //PPR zmenit na celou fci
+            //document.getElementById("userstring").style.color = "#FAF9F4"; //PPR zmenit na celou fci
         }
     }
 
@@ -225,8 +231,6 @@ function swipeSender(swipe_type){
     else{
         alert("Scan Key First! User undefined...");
     }
-
-
 }
 
 /*
@@ -348,76 +352,27 @@ document.getElementById('cancel').addEventListener('click', function(){
 }, false);
 
 
-
-*/
-/*
-function updateClock() {
-    // Gets the current time
-    var now = new Date();
-    var d = new Date();
-    var weekday = new Array(7);
-    weekday[0]=  "Sun";
-    weekday[1] = "Mon";
-    weekday[2] = "Tue";
-    weekday[3] = "Wed";
-    weekday[4] = "Thu";
-    weekday[5] = "Fri";
-    weekday[6] = "Sat";
-
-    var wday = weekday[d.getDay()];
-    // Get the hours, minutes and seconds from the current time
-    var hours = now.getHours();
-    var minutes = now.getMinutes();
-    var seconds = now.getSeconds();
-    var month = now.getMonth() + 1;
-    var day = now.getDate();
-    var year = now.getFullYear();
-    // Format hours, minutes and seconds
-    if (hours < 10) {
-        hours = "0" + hours;
-    }
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    }
-    if (seconds < 10) {
-        seconds = "0" + seconds;
-    }
-
-    // Gets the element we want to inject the clock into
-    var time = document.getElementById('clock');
-    var date = document.getElementById('date');
-
-    // Sets the elements inner HTML value to our clock data
-    time.innerHTML = hours + ':' + minutes + ':' + seconds;
-    date.innerHTML = wday + '  ' + day + "." + month + "." + year;
-}
 */
 
+//mamages different user work-statuses
 function getLastActionString(shorcut){
     switch(shorcut){
         case "IN":
             return "At Work";
-
         case "OUT":
             return "Out of Work";
-
         case "OBR":
             return "On Break";
-
         case "FBR":
             return "At Work";
-
         case "OTR":
             return "On Work Trip";
-
         case "FTR":
             return "At Work";
     }
 }
 
-// This function gets the current time and injects it into the DOM
-//setInterval('updateClock()', 200);
-
+//manages different swipe images (fontawesome icons)
 function getSwipeType(swipe_type){ //Update swipe icons depended on swipe type
     switch(swipe_type){
         case "IN":
@@ -435,6 +390,7 @@ function getSwipeType(swipe_type){ //Update swipe icons depended on swipe type
     }
 }
 
+//update swipes in sliding left menu list
 function updateSwipeList() {
     var weekday = new Array();
     weekday[0]=  "Sun";
@@ -450,7 +406,6 @@ function updateSwipeList() {
         if (!error && response.statusCode == 200) { //if there is an error
             var swipes = JSON.parse(body);
             var date;
-            var swipelen = 10;
             var NUM_OF_SWIPES;
             if(swipes.length < swipelen){
                 NUM_OF_SWIPES = swipes.length;
@@ -505,13 +460,22 @@ if(process.arch == "arm"){
 //load server settings to element
 $(".server-url").text(settings.URL.split("//")[1]);
 
+//logout function
 function logOut(){
-    document.getElementById("userstring").innerHTML = "Logging out...";
-    document.getElementById("userstring").style.color = "#FAF9F4";
-    disableAllButtons();
+    terminalButtonsInfoText.text('Logging out...');
     setTimeout(function(){
-        enableButton("cancel")
-        document.getElementById('cancel').click();
-    },500
-    )
+        resetAll();
+        terminal.SystemCodeScan();
+    },500)
 }
+
+//resetAll means set default values to selectors
+function resetAll() {
+  terminalInfoText.text('Scan your code please...');
+  terminalButtonsInfoText.text('Please select swipe type');
+}
+
+$('#btnEXIT').on('click', function(){
+  resetAll();
+  terminal.SystemCodeScan();
+});

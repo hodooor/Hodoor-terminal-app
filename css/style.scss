@@ -59,6 +59,7 @@ h1 {
 }
 
 #block-codescan {
+  //transition: 0.8s;
   background: none;
   .subblock-top {
     height: 50px;
@@ -87,6 +88,7 @@ h1 {
     }
   }
   .subblock-center {
+    //transition: 0.8s;
     margin-top: 25px;
     text-align: center;
     padding: none;
@@ -115,6 +117,7 @@ h1 {
     }
   }
   .subblock-center-buttons {
+    //transition: 0.8s;
     .button-block {
       width: 100%;
       text-align: center;
@@ -206,14 +209,14 @@ h1 {
       padding-left: 25px;
     }
     .last-swipes-list {
-      margin-top: 15px;
+      margin-top: 45px;
       height: 420px; //was 280
       max-height: 280px !important;
       list-style-type: none;
       font-size: 16px;
       color: #ccc;
       li {
-        padding-bottom: 8px;
+        padding-bottom: 7px;
       }
     }
     .hide-last-swipes-after {

@@ -1,10 +1,22 @@
 /*Look Mom.... I am running jQuery on Electron*/
 var $ = require('jquery');
 //$(document).ready(function(){
-$('body').ready(function(){
+/*$('body').ready(function(){
   $('#loader').fadeOut('fast');
   $('#content').fadeIn('slow');
-});
+});*/
+
+function loaderOn() {
+  $('#loader').show();
+  $('#content').hide();
+}
+exports.loaderOn = loaderOn;
+
+function loaderOff() {
+  $('#loader').fadeOut('fast');
+  $('#content').fadeIn('slow');
+}
+exports.loaderOff = loaderOff;
 
 /*Define variables and constants*/
 var timeoutinterval = 10;
@@ -60,7 +72,7 @@ var autoLogoutAfter;
 var autoLogoutAfterTimeInterval;
 function SystemCodeOK(autoLogoutAfter) {
   console.log('I am in code scaned DONE mode');
-    $('#block-codescan').fadeIn();
+    $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center').hide();
     $('#block-codescan .subblock-center-buttons').show();
     $('.code-activated').show();
@@ -83,11 +95,13 @@ exports.SystemCodeOK = SystemCodeOK;
 //SystemCodeScan();
 var SystemCodeScan = function() {
   console.log('I am in code scan mode');
-    $('#block-codescan').fadeIn();
+    $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center-buttons').hide();
     $('#block-codescan .subblock-center').show();
     $('.code-activated').hide();
 }
+exports.SystemCodeScan = SystemCodeScan;
+
 /*slide-menu for last swipes*/
 var toggleState = 0;
 var HideLastSwipesMenuAfterText = timeoutinterval;
@@ -120,6 +134,30 @@ $('.menu-btn').on('click', function(){
   }
 });
 
+//Display only this types of buttons
+function btnShowIN(){
+  $('#btnIN').show();
+  $('#btnBREAK').hide();
+  $('#btnTRIP').hide();
+  $('#btnOUT').hide();
+  $('#btnTRIPOUT').hide();
+  $('#btnBREAKOUT').hide();
+}
+exports.btnShowIN = btnShowIN;
+btnShowIN();
+function btnShowAfterIN(){
+
+}
+exports.btnShowAfterIN = btnShowAfterIN;
+function btnShowTripRet(){
+
+}
+exports.btnShowTripRet = btnShowTripRet;
+function btnShowBreakRet(){
+
+}
+exports.btnShowBreakRet = btnShowBreakRet;
+
 function SystemCodeScan() {
   console.log('I am in code scan mode');
     $('#block-codescan').fadeIn();
@@ -127,4 +165,3 @@ function SystemCodeScan() {
     $('#block-codescan .subblock-center').show();
     $('.code-activated').hide();
 }
-exports.SystemCodeScan = SystemCodeScan;
