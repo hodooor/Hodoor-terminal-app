@@ -1,7 +1,8 @@
 var request = require('request');
-//var func = require('./js/functions.js');
 const fs = require('fs');
 var settings = require("./settings.json"); //for token and url get
+let terminal = require('./js/functions.js');
+var $ = require('jquery');
 
 /*Buttons deppends on last swipe type*/
 //PPR button logic - jaky swipe kdy
@@ -9,6 +10,8 @@ var settings = require("./settings.json"); //for token and url get
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 var cancel_timer;
+
+var terminalInfoText = $('.subblock-center .info-text');
 
 var keysFromServer = function(){
     var user_keys;
@@ -26,15 +29,13 @@ var keysFromServer = function(){
                     if (!error && response.statusCode == 200) {
                         user_keys = JSON.parse(body);
                         console.log("User keys loaded from server " + URL );
-                        //document.getElementById('online_status').innerHTML = "Online"; //PPR
-                        //document.getElementById('online_status').style.color =  "#1FD26A";//PPR
+                        terminal.SystemCodeScan();
                         updateSwipeList();
                     }
                     else{
                         console.log(body)
                         console.log(error)
-                        //document.getElementById('online_status').innerHTML = "Offline"; //PPR
-                        //document.getElementById('online_status').style.color = "#EC3F8C"; //PPR
+                        terminal.SystemOffline();
                     }
                     //calls all users on log
                     console.log("User keys are: ");
@@ -44,7 +45,6 @@ var keysFromServer = function(){
                         that.loadUser(keyCodeReader.getCurrentKeyCode());
                     }
                     $('.server-status').text('online');
-                    //func.SystemCodeScan(); Predelat nakonec
                 })
 
         },
@@ -64,23 +64,23 @@ var keysFromServer = function(){
                     }
                 });
 
-                var userstring = document.getElementById("userstring"); //PPR
+                var userstring = terminalInfoText;
 
                 if(Object.keys(filtered).length === 1){
                     current_user = filtered[0];
                     console.log("Loaded user: "); //PPR
                     console.log(current_user); //PPR
-                    userstring.innerHTML = "Key Verified"; //PPR
-                    userstring.style.color = "#1FD26A"; //PPR
+                    userstring.text("Key Verified");
+                    userstring.css('color',"#1FD26A");
                     var status_string = getLastActionString(current_user.user.last_swipe.swipe_type);
                     if(status_string === "At Work"){ //PPR
-                        document.getElementById("status").style.color = "#1FD26A"; //PPR
+                        //document.getElementById("status").style.color = "#1FD26A"; //PPR
                     }
                     else
                     {
-                        document.getElementById("status").style.color = "#EC3F8C"; //PPR
+                        //document.getElementById("status").style.color = "#EC3F8C"; //PPR
                     }
-
+///pokracuj zde
                     document.getElementById("keynumber").innerHTML = "Key: " + current_user.key_type + " " + current_user.id; //PPR
                     document.getElementById("status").innerHTML = "Status: " + status_string; //PPR
                     document.getElementById("name").innerHTML = "User: " + current_user.user.username; //PPR
@@ -171,7 +171,7 @@ var keyCodeReader = function (){
         pressed : function (keycode){
             pressed_key = keycode.keyCode;
             if(pressed_key === CR_SYMBOL){
-                document.getElementById("userstring").innerHTML ="Verifying key.."
+              terminalInfoText.text("Verifying key...");
                 key = currently_scanned_key;
                 console.log("Swiped key: " +key);
                 //keysFromServer.loadAll(true);//load keys and current user

@@ -44,7 +44,7 @@ function createWindow () {
             resizable: false,
             x: 0,
             y:0,
-            useContentSize: true,
+            useContentSize: false,
         });
     }
     //TODO: Figure out why mainWindow.kiosk = true cant be used
