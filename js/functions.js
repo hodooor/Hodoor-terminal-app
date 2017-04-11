@@ -74,11 +74,11 @@ function SystemCodeOK(autoLogoutAfter) {
   console.log('I am in code scaned DONE mode');
     $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center').hide();
-    $('#block-codescan .subblock-center-buttons').show();
+    $('#block-codescan .subblock-center-buttons').fadeIn('slow');
     $('.code-activated').show();
     $('.info-text-inline').hide();
     $('.code-activated').addClass('table-bordered');
-    if(autoLogoutAfter != 'none') {
+    /*if(autoLogoutAfter != 'none') {
       autoLogoutAfterTimeInterval = setInterval(function () {
         $('.logout-time-text').text(autoLogoutAfter--);
         $('.info-text-inline').show();
@@ -88,16 +88,16 @@ function SystemCodeOK(autoLogoutAfter) {
           return SystemCodeScan();
         }
       }, 1000);
-    }
+    }*/
 }
 exports.SystemCodeOK = SystemCodeOK;
-//SystemCodeOK(15);
-//SystemCodeScan();
+
+//display mode: user should scan a key/code
 var SystemCodeScan = function() {
   console.log('I am in code scan mode');
     $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center-buttons').hide();
-    $('#block-codescan .subblock-center').show();
+    $('#block-codescan .subblock-center').fadeIn('slow');
     $('.code-activated').hide();
 }
 exports.SystemCodeScan = SystemCodeScan;
@@ -126,7 +126,9 @@ $('.menu-btn').on('click', function(){
   if(!toggleState) {
       ShowLastSwipesMenu();
       toggleState=1;
-      TimeOut = setTimeout(function(){HideLastSwipesMenu();}, 1000*1*timeoutinterval); //n-seconds
+      TimeOut = setTimeout(function(){
+        HideLastSwipesMenu();
+      }, 1000*1*timeoutinterval); //n-seconds
   } else {
       HideLastSwipesMenu();
       toggleState=0;
@@ -144,24 +146,41 @@ function btnShowIN(){
   $('#btnBREAKOUT').hide();
 }
 exports.btnShowIN = btnShowIN;
-btnShowIN();
-function btnShowAfterIN(){
 
+function btnShowAfterIN(){
+  $('#btnIN').hide();
+  $('#btnBREAK').show();
+  $('#btnTRIP').show();
+  $('#btnOUT').show();
+  $('#btnTRIPOUT').hide();
+  $('#btnBREAKOUT').hide();
 }
 exports.btnShowAfterIN = btnShowAfterIN;
-function btnShowTripRet(){
 
+function btnShowTripRet(){
+  $('#btnIN').hide();
+  $('#btnBREAK').hide();
+  $('#btnTRIP').hide();
+  $('#btnOUT').hide();
+  $('#btnTRIPOUT').show();
+  $('#btnBREAKOUT').hide();
 }
 exports.btnShowTripRet = btnShowTripRet;
-function btnShowBreakRet(){
 
+function btnShowBreakRet(){
+  $('#btnIN').hide();
+  $('#btnBREAK').hide();
+  $('#btnTRIP').hide();
+  $('#btnOUT').hide();
+  $('#btnTRIPOUT').hide();
+  $('#btnBREAKOUT').show();
 }
 exports.btnShowBreakRet = btnShowBreakRet;
 
 function SystemCodeScan() {
   console.log('I am in code scan mode');
-    $('#block-codescan').fadeIn();
+    $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center-buttons').hide();
-    $('#block-codescan .subblock-center').show();
+    $('#block-codescan .subblock-center').fadeIn('slow');
     $('.code-activated').hide();
 }

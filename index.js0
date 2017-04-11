@@ -8,7 +8,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 var swipelen = 10; //nuber of swipes to see in left sliding list
 var logoutTime = 5; //15sec to logout
-var cancel_timer;
+var textDisplayDelay = 2; //n-sec to text value hold
+var cancel_timer_logout, cancel_timer_wrongKey;
 
 var terminalServerUrl = $('.subblock-top .server-url');
 var terminalServerStatus = $('.subblock-top .server-status');
@@ -42,11 +43,14 @@ var keysFromServer = function(){
                         console.log("User keys loaded from server " + URL );
                         terminal.loaderOff();
                         terminal.SystemCodeScan();
+                        clearTimeout(cancel_timer_logout);
+                        clearTimeout(cancel_timer_wrongKey);
                         updateSwipeList();
                     }
                     else{
-                        console.log(body)
-                        console.log(error)
+                        console.log(body);
+                        console.log(error);
+                        terminal.loaderOff();
                         terminal.SystemOffline();
                     }
                     //calls all users on log
@@ -82,7 +86,6 @@ var keysFromServer = function(){
                     console.log("Loaded user: "); //PPR
                     console.log(current_user); //PPR
                     userstring.text("Key verified");
-                    //userstring.css('color',"#1FD26A");
                     var status_string = getLastActionString(current_user.user.last_swipe.swipe_type);
                     if(status_string === "At Work"){ //PPR
                         //document.getElementById("status").style.color = "#1FD26A"; //PPR
@@ -91,64 +94,37 @@ var keysFromServer = function(){
                     {
                         //document.getElementById("status").style.color = "#EC3F8C"; //PPR
                     }
-                    terminal.SystemCodeOK(logoutTime); //call another mode
+                    terminal.SystemCodeOK(logoutTime); //call another mode to display buttons
                     /*set values to see in terminal*/
-                    terminalUserKey.text(current_user.id+" "+current_user.key_type);
-                    terminalUserName.text(current_user.user.username);
-                    terminalUserHours.text(current_user.user.hours_this_month.toFixed(2)+' Hours');
-                    terminalUserStatus.text(status_string);
-
-                    //disableAllButtons(); //PPR  - nahradit strukturou skryvania buttons new
-/*
+                      terminalUserKey.text(current_user.id+" "+current_user.key_type);
+                      terminalUserName.text(current_user.user.username);
+                      terminalUserHours.text(current_user.user.hours_this_month.toFixed(2)+' Hours');
+                      terminalUserStatus.text(status_string);
+                    clearInterval(cancel_timer_wrongKey); //must be cleared
                     switch(current_user.user.last_swipe.swipe_type){
-                    case "IN":
-                        enableButtons(IN_BUTTONS); //PPR tady jen if tak visible
-                    break;
-
-                    case "OUT":
-                        enableButtons(OUT_BUTTONS);
-                    break;
-
-                    case "OBR":
-                        enableButtons(BREAK_BUTTONS);
-                    break;
-
-                    case "FBR":
-                        enableButtons(BREAK_RET_BUTTONS);
-                    break;
-
-                    case "OTR":
-                        enableButtons(TRIP_BUTTONS);
-                    break;
-
-                    case "FTR":
-                        enableButtons(TRIP_RET_BUTTONS);
-                    break;
-                    case undefined: //probably first swipe
-                        enableButtons(OUT_BUTTONS);
-                    break;
-                    default:
-                        console.log("Error default")
-                    break;
-                  }*/
-                  cancel_timer = setTimeout(function() {
+                      case "IN" : terminal.btnShowAfterIN();  break;
+                      case "OUT": terminal.btnShowIN(); break;
+                      case "OBR": terminal.btnShowBreakRet(); break;
+                      case "FBR": terminal.btnShowAfterIN(); break;
+                      case "OTR": terminal.btnShowTripRet(); break;
+                      case "FTR": terminal.btnShowAfterIN(); break;
+                      case undefined: terminal.btnShowIN(); break;
+                    default: console.log("Error default"); break;
+                  }
+                  cancel_timer_logout = setTimeout(function() {
                        logOut();
+                       clearTimeout(cancel_timer_wrongKey);
                     },(logoutTime+1.5)*1000)
                 }
-                else{ //PPR - zmenit pote cele
+                else {
                     current_user = undefined;
                     console.log("Wrong key!");
                     userstring.text("Wrong Key!");
-                    //userstring.style.color = "#EC3F8C"
-                    //document.getElementById("name").style.visibility = "hidden";
-                    //document.getElementById("status").style.visibility = "hidden";
-                    //document.getElementById("keynumber").style.visibility = "hidden";
-                    //document.getElementById("hours_this_month").style.visibility = "hidden";
-                    //disableAllButtons();
-                    setTimeout(function () {
+                    cancel_timer_wrongKey = setTimeout(function () {
                       resetAll();
+                      clearTimeout(cancel_timer_logout);
                       terminal.SystemCodeScan();
-                    }, 1500);
+                    }, textDisplayDelay*1000);
                 }
             }
             else{
@@ -159,8 +135,8 @@ var keysFromServer = function(){
         getUser: function(){return current_user;},
         unloadUser: function(){
             current_user = undefined;
-            document.getElementById("userstring").innerHTML = "Scan your key..."; //PPR zmenit na celou fci
-            //document.getElementById("userstring").style.color = "#FAF9F4"; //PPR zmenit na celou fci
+            clearTimeout(cancel_timer_logout);
+            clearTimeout(cancel_timer_wrongKey);
         }
     }
 
@@ -197,7 +173,7 @@ var keyCodeReader = function (){
         getCurrentKeyCode: function(){return key;},
     }
 }();
-document.addEventListener("keydown",keyCodeReader.pressed)
+document.addEventListener("keydown",keyCodeReader.pressed); //if any key is pressed
 
 function swipeSender(swipe_type){
     URL = settings.URL + '/api/swipes/';
@@ -475,7 +451,10 @@ function resetAll() {
   terminalButtonsInfoText.text('Please select swipe type');
 }
 
-$('#btnEXIT').on('click', function(){
+$('#btnEXIT').on('click', function(){ //bad, use OVIs original
   resetAll();
+  clearTimeout(cancel_timer_logout);
+  clearTimeout(cancel_timer_wrongKey);
+  keysFromServer.unloadUser();
   terminal.SystemCodeScan();
 });

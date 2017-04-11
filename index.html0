@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <title>Hodoor</title>
+  </head>
+
+  <body>
+
+
+	<div id ="left_col_div">
+		<button id="cancel" type ="button">
+  			<img class="but_icon" id ="but_cancel_icon" src="img/cancel.svg">Cancel
+  		</button>		
+  		<p id="userstring">Scan your key...</p>
+  		<p id="name">name</p>
+  		<p id="keynumber">keynumber</p>
+  		<p id="status">status</p>
+  		<p id="hours_this_month">hours</p>
+	</div>
+  	<div id ="right_col_div">
+  		<div id = "connection">
+  			<p id="server">hodoor.eledus.cz</p>
+	  		<p id="clock">Time</p>
+	  		<p id="date">Date</p>
+	  		<p id="online_status">Offline</p>
+  		</div>
+  		<p id="recent_swipes">Recent Swipes:</p>
+  		<ul id="last_actions">
+  		<!--	<li>21:00: <img class="list_icon" src ="img/incom.svg"> Ondřej Vičar</li>
+  			<li>22:24: <img class="list_icon" src ="img/outgo.svg"> Lukáš Krčma</li>
+  			<li>00:00: <img class="list_icon" src ="img/break.svg"> Jaroslav Malec</li>
+  			<li>21:00: <img class="list_icon" src ="img/trip.svg"> Ondřej Vičar</li>
+  			<li>22:24: <img class="list_icon" src ="img/break_ret.svg"> Lukáš Krčma</li>
+  			<li>00:00: <img class="list_icon" src ="img/trip_ret.svg"> Jaroslav Malec</li>-->
+  		<ul>
+  	</div>
+
+
+  	<div id="buttons_div">  
+	    <div id=but>
+	    	<button id="incom" type="button">
+	    		<img class="but_icon" id ="but_incom_icon" src ="img/incom.svg">Incoming
+	    	</button>
+	    </div>
+	   	<div id=but>
+	    	<button id="break" type="button">
+	    		<img class="but_icon" id ="but_break_icon" src="img/break.svg">Break
+	    	</button>
+	    </div>
+	    <div id=but>
+	    	<button id="trip" type="button">
+	    		<img class="but_icon" id ="but_trip_icon" src ="img/trip.svg">Work Trip
+	    	</button>
+	    </div>
+	    <div id=but>
+	    	<button id="outgo" type="button">
+	    		<img class="but_icon" id ="but_outgo_icon" src ="img/outgo.svg">Outgoing
+	    	</button>
+	    </div>
+	    <div id=but>
+	    	<button id="break_ret" type="button">
+	    		<img class="but_icon" id ="but_break_ret_icon" src ="img/break_ret.svg">Break Return
+	    	</button>
+	    </div>
+	    <div id=but>
+	    	<button id="trip_ret" type="button">
+	    		<img class="but_icon" id ="but_trip_ret_icon" src ="img/trip_ret.svg">Trip Return
+	    	</button>
+	    </div>
+	</div>
+	
+	<script src="util.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
+
+
+
+
+
