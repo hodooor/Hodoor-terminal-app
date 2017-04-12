@@ -65,7 +65,7 @@ var keysFromServer = function(){
                         clearTimeout(cancel_timer_logout);
                         clearTimeout(cancel_timer_wrongKey);
                         updateSwipeList();
-                    }
+                    }/**/
                     else{
                           console.log(body);
                           console.log(error);
