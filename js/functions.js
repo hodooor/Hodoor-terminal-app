@@ -1,11 +1,7 @@
 /*Look Mom.... I am running jQuery on Electron*/
 var $ = require('jquery');
-//$(document).ready(function(){
-/*$('body').ready(function(){
-  $('#loader').fadeOut('fast');
-  $('#content').fadeIn('slow');
-});*/
 
+/*CSS Loader functions*/
 function loaderOn() {
   $('#loader').show();
   $('#content').hide();
@@ -65,6 +61,8 @@ updateDate(); //Update Date
 function SystemOffline() {
   console.log('I am in offline mode');
     $('#block-offline').fadeIn();
+    $('#block-codescan').hide();
+    $('#sliding-menu').hide();
 }
 exports.SystemOffline = SystemOffline;
 
@@ -72,6 +70,7 @@ var autoLogoutAfter;
 var autoLogoutAfterTimeInterval;
 function SystemCodeOK(autoLogoutAfter) {
   console.log('I am in code scaned DONE mode');
+    $('#block-offline').hide();
     $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center').hide();
     $('#block-codescan .subblock-center-buttons').fadeIn('slow');
@@ -95,6 +94,8 @@ exports.SystemCodeOK = SystemCodeOK;
 //display mode: user should scan a key/code
 var SystemCodeScan = function() {
   console.log('I am in code scan mode');
+  resetAll();
+    $('#block-offline').hide();
     $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center-buttons').hide();
     $('#block-codescan .subblock-center').fadeIn('slow');
@@ -177,10 +178,9 @@ function btnShowBreakRet(){
 }
 exports.btnShowBreakRet = btnShowBreakRet;
 
-function SystemCodeScan() {
-  console.log('I am in code scan mode');
-    $('#block-codescan').fadeIn('slow');
-    $('#block-codescan .subblock-center-buttons').hide();
-    $('#block-codescan .subblock-center').fadeIn('slow');
-    $('.code-activated').hide();
+//resetAll means set default values to selectors
+function resetAll() {
+  $('.subblock-center .info-text').text('Scan your code please...');
+  $('.subblock-center-buttons .info-text').text('Please select swipe type');
 }
+exports.resetAll = resetAll;

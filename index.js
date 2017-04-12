@@ -1,14 +1,14 @@
-var request = require('request');
+const request = require('request');
 const fs = require('fs');
-var settings = require("./settings.json"); //for token and url get
+const settings = require("./settings.json"); //for token and url get
 const terminal = require('./js/functions.js');
 const $ = require('jquery');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-var swipelen = 10; //nuber of swipes to see in left sliding list
-var logoutTime = 5; //n-sec to automatic user logout and also user unload
-var textDisplayDelay = 2; //n-sec to text value hold
+const swipelen = 10; //nuber of swipes to see in left sliding list
+const logoutTime = 5; //n-sec to automatic user logout and also user unload
+const textDisplayDelay = 2; //n-sec to text value hold
 
 //timers
 var cancel_timer_logout,
@@ -17,26 +17,28 @@ var cancel_timer_logout,
     ;
 
 /*This is used for set interval of automatic keys loading from server database*/
-var loadKeysIntervalTime = 5*60; //set time of keys to load, n*60 = in minutes
+const loadKeysIntervalTime = 1*60; //set time of keys to load, n*60 = in minutes
 var userIsLoaded = false; //if true frequentely load keys
 startLoadingKeysInterval(userIsLoaded); //initial call of repeating function
 
 //jquery selectors for inner text changing, only for CSS change
 //server texts
-var terminalServerUrl = $('.subblock-top .server-url');
-var terminalServerStatus = $('.subblock-top .server-status');
+const terminalServerUrl = $('.subblock-top .server-url');
+const terminalServerStatus = $('.subblock-top .server-status');
 //user texts
-var terminalInfoText = $('.subblock-center .info-text');
-var terminalUserName = $('.subblock-top .user');
-var terminalUserKey= $('.subblock-top .key');
-var terminalUserStatus = $('.subblock-top .user-status');
-var terminalUserHours = $('.subblock-top .user-hours');
+const terminalInfoText = $('.subblock-center .info-text');
+const terminalUserName = $('.subblock-top .user');
+const terminalUserKey= $('.subblock-top .key');
+const terminalUserStatus = $('.subblock-top .user-status');
+const terminalUserHours = $('.subblock-top .user-hours');
 //in another mode
-var terminalButtonsInfoText = $('.subblock-center-buttons .info-text');
+const terminalButtonsInfoText = $('.subblock-center-buttons .info-text');
+const displayButtonsBlock = $('.subblock-center-buttons');
 
 terminal.loaderOn(); //initial load, run CSS/JS loader inmediately
-console.log("repeat startLoadingKeysInterval function after: " +loadKeysIntervalTime/60+" minutes");
-console.log("autouserload is every: "+logoutTime+" seconds");
+
+console.info("repeat startLoadingKeysInterval function after: " +loadKeysIntervalTime/60+" minutes");
+console.info("autouserload is every: "+logoutTime+" seconds");
 
 var keysFromServer = function(){
     var user_keys;
@@ -49,6 +51,8 @@ var keysFromServer = function(){
             var that = this;
             //document.getElementById('online_status').innerHTML = "Loading Status";
             terminalServerStatus.text("Loading status");
+            terminalServerStatus.addClass('info');
+
             URL = settings.URL + "/api/keys/";
             request({url:URL,headers:{"Authorization": "Token " + settings.TOKEN}},
                 function (error, response, body) {
@@ -57,6 +61,7 @@ var keysFromServer = function(){
                           console.log("User keys loaded from server " + URL );
                         terminal.loaderOff();
                         terminal.SystemCodeScan();
+                        terminalServerStatus.removeClass('info').removeClass('danger').addClass('success');
                         clearTimeout(cancel_timer_logout);
                         clearTimeout(cancel_timer_wrongKey);
                         updateSwipeList();
@@ -66,6 +71,7 @@ var keysFromServer = function(){
                           console.log(error);
                         terminal.loaderOff();
                         terminal.SystemOffline();
+                        terminalServerStatus.removeClass('info').addClass('danger').removeClass('success');
                     }
                     //calls all users on log
                       console.log("User keys are: ");
@@ -75,6 +81,7 @@ var keysFromServer = function(){
                         that.loadUser(keyCodeReader.getCurrentKeyCode());
                     }
                     $('.server-status').text('online');
+                    terminalServerStatus.removeClass('info').removeClass('danger').addClass('success');
                 })
         },
         getAll: function(){return user_keys;},
@@ -97,20 +104,12 @@ var keysFromServer = function(){
 
                 if(Object.keys(filtered).length === 1){
                     current_user = filtered[0];
-                    console.log("Loaded user: "); //PPR
-                    console.log(current_user); //PPR
+                      console.log("Loaded user: ");
+                      console.log(current_user);
                     userstring.text("Key verified");
                     userIsLoaded = true;
                       console.log("user is loaded:" +userIsLoaded);
-                    startLoadingKeysInterval(userIsLoaded);
                     var status_string = getLastActionString(current_user.user.last_swipe.swipe_type);
-                    if(status_string === "At Work"){ //PPR
-                        //document.getElementById("status").style.color = "#1FD26A"; //PPR
-                    }
-                    else
-                    {
-                        //document.getElementById("status").style.color = "#EC3F8C"; //PPR
-                    }
                     terminal.SystemCodeOK(logoutTime); //call another mode to display buttons
                     /*set values to see in terminal*/
                       terminalUserKey.text(current_user.id+" "+current_user.key_type);
@@ -141,7 +140,7 @@ var keysFromServer = function(){
                     console.log("Wrong key!");
                     userstring.text("Wrong Key!");
                     cancel_timer_wrongKey = setTimeout(function () {
-                      resetAll();
+                      //terminal.resetAll();
                       clearTimeout(cancel_timer_logout);
                       terminal.SystemCodeScan();
                     }, textDisplayDelay*1000);
@@ -197,6 +196,10 @@ var keyCodeReader = function (){
               terminalInfoText.text("Verifying key...");
                 key = currently_scanned_key;
                 console.log("Swiped key: " +key);
+                /*
+                If auto keys load time will be larger, this must be
+                called only for one user, not for all
+                */
                 //keysFromServer.loadAll(true);//load keys and current user
                 keysFromServer.loadUser(key);
                 currently_scanned_key = "";
@@ -215,7 +218,7 @@ function swipeSender(swipe_type){
     URL = settings.URL + '/api/swipes/';
     var date = new Date();
     var current_user = keysFromServer.getUser();
-    document.getElementById("userstring").innerHTML = "Posting Swipe";
+    terminalButtonsInfoText.text("Posting Swipe");
     if(current_user != undefined){
         var options = {
             uri : URL,
@@ -234,6 +237,7 @@ function swipeSender(swipe_type){
             + body.user + " " + body.datetime) // Print the shortened url.
             updateSwipeList();
             keysFromServer.loadAll(false);
+            //resetAll();
           }
           else{
             alert("Can't post swipe. Server is Offline. Use pen and paper :)");
@@ -290,81 +294,46 @@ function enableButtons(buttons){
     }
 }
 disableAllButtons();
-
-
-document.getElementById('incom').addEventListener('click', function(){
-    clearTimeout(cancel_timer);
-    swipeSender("IN");
-    disableAllButtons();
-    document.getElementById("name").style.visibility = "hidden";
-    document.getElementById("status").style.visibility = "hidden";
-    document.getElementById("keynumber").style.visibility = "hidden";
-    document.getElementById("hours_this_month").style.visibility = "hidden";
-    keysFromServer.unloadUser();
-}, false);
-document.getElementById('outgo').addEventListener('click', function(){
-    clearTimeout(cancel_timer);
-    swipeSender("OUT");
-    disableAllButtons();
-    document.getElementById("name").style.visibility = "hidden";
-    document.getElementById("status").style.visibility = "hidden";
-    document.getElementById("keynumber").style.visibility = "hidden";
-    document.getElementById("hours_this_month").style.visibility = "hidden";
-    keysFromServer.unloadUser();
-}, false);
-document.getElementById('break').addEventListener('click', function(){
-    clearTimeout(cancel_timer);
-    swipeSender("OBR");
-    disableAllButtons();
-    document.getElementById("name").style.visibility = "hidden";
-    document.getElementById("status").style.visibility = "hidden";
-    document.getElementById("keynumber").style.visibility = "hidden";
-    document.getElementById("hours_this_month").style.visibility = "hidden";
-    keysFromServer.unloadUser();
-}, false);
-document.getElementById('break_ret').addEventListener('click', function(){
-    clearTimeout(cancel_timer);
-    swipeSender("FBR");
-    disableAllButtons();
-    document.getElementById("name").style.visibility = "hidden";
-    document.getElementById("status").style.visibility = "hidden";
-    document.getElementById("keynumber").style.visibility = "hidden";
-    document.getElementById("hours_this_month").style.visibility = "hidden";
-    keysFromServer.unloadUser();
-}, false);
-document.getElementById('trip').addEventListener('click', function(){
-    clearTimeout(cancel_timer);
-    swipeSender("OTR");
-    disableAllButtons();
-    document.getElementById("name").style.visibility = "hidden";
-    document.getElementById("status").style.visibility = "hidden";
-    document.getElementById("keynumber").style.visibility = "hidden";
-    document.getElementById("hours_this_month").style.visibility = "hidden";
-    keysFromServer.unloadUser();
-}, false);
-document.getElementById('trip_ret').addEventListener('click', function(){
-    clearTimeout(cancel_timer);
-    swipeSender("FTR");
-    disableAllButtons();
-    document.getElementById("name").style.visibility = "hidden";
-    document.getElementById("status").style.visibility = "hidden";
-    document.getElementById("keynumber").style.visibility = "hidden";
-    document.getElementById("hours_this_month").style.visibility = "hidden";
-    keysFromServer.unloadUser();
-}, false);
-
-document.getElementById('cancel').addEventListener('click', function(){
-    clearTimeout(cancel_timer);
-    disableAllButtons();
-    keysFromServer.unloadUser();
-    document.getElementById("name").style.visibility = "hidden";
-    document.getElementById("status").style.visibility = "hidden";
-    document.getElementById("keynumber").style.visibility = "hidden";
-    document.getElementById("hours_this_month").style.visibility = "hidden";
-}, false);
-
-
 */
+
+//Just buttons actions
+$('#btnIN').on('click', function(){
+    clearTimeout(cancel_timer_logout);
+    swipeSender("IN");
+    keysFromServer.unloadUser();
+});
+$('#btnOUT').on('click', function(){
+    clearTimeout(cancel_timer_logout);
+    swipeSender("OUT");
+    keysFromServer.unloadUser();
+});
+$('#btnBREAK').on('click', function(){
+    clearTimeout(cancel_timer_logout);
+    swipeSender("OBR");
+    keysFromServer.unloadUser();
+});
+$('#btnBREAKOUT').on('click', function(){
+    clearTimeout(cancel_timer_logout);
+    swipeSender("FBR");
+    keysFromServer.unloadUser();
+});
+$('#btnTRIP').on('click', function(){
+    clearTimeout(cancel_timer_logout);
+    swipeSender("OTR");
+    keysFromServer.unloadUser();
+});
+$('#btnTRIPOUT').on('click', function(){
+    clearTimeout(cancel_timer_logout);
+    swipeSender("FTR");
+    keysFromServer.unloadUser();
+});
+$('#btnEXIT').on('click', function(){ //bad, use OVIs original
+  //resetAll();
+  clearTimeout(cancel_timer_logout);
+  clearTimeout(cancel_timer_wrongKey);
+  keysFromServer.unloadUser();
+  terminal.SystemCodeScan();
+});
 
 //mamages different user work-statuses
 function getLastActionString(shorcut){
@@ -476,21 +445,7 @@ $(".server-url").text(settings.URL.split("//")[1]);
 function logOut(){
     terminalButtonsInfoText.text('Logging out...');
     setTimeout(function(){
-        resetAll();
+        //resetAll();
         terminal.SystemCodeScan();
     },500)
 }
-
-//resetAll means set default values to selectors
-function resetAll() {
-  terminalInfoText.text('Scan your code please...');
-  terminalButtonsInfoText.text('Please select swipe type');
-}
-
-$('#btnEXIT').on('click', function(){ //bad, use OVIs original
-  resetAll();
-  clearTimeout(cancel_timer_logout);
-  clearTimeout(cancel_timer_wrongKey);
-  keysFromServer.unloadUser();
-  terminal.SystemCodeScan();
-});

@@ -2,6 +2,8 @@ $black: #000;
 $white: #fff;
 $primary: #00AEEF;
 $danger: #E74121;
+$info: yellow;
+$success: lighten(#00AD1A, 15%);
 
 @font-face {
     font-family: myFont;
@@ -23,6 +25,14 @@ h1 {
 
 .primary {
   color: $primary;
+}
+
+.success {
+  color: $success;
+}
+
+.info {
+  color: $info;
 }
 
 #block-offline {
@@ -72,6 +82,7 @@ h1 {
       padding-left: 3px;
     }
     #sliding-menu {
+      cursor: pointer;
       text-align: center;
       position: absolute;
       z-index: 2;
