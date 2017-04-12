@@ -1,29 +1,42 @@
 var request = require('request');
 const fs = require('fs');
 var settings = require("./settings.json"); //for token and url get
-let terminal = require('./js/functions.js');
-var $ = require('jquery');
+const terminal = require('./js/functions.js');
+const $ = require('jquery');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 var swipelen = 10; //nuber of swipes to see in left sliding list
-var logoutTime = 5; //15sec to logout
+var logoutTime = 5; //n-sec to automatic user logout and also user unload
 var textDisplayDelay = 2; //n-sec to text value hold
-var cancel_timer_logout, cancel_timer_wrongKey;
 
+//timers
+var cancel_timer_logout,
+    cancel_timer_wrongKey,
+    clear_Interval_loadAll
+    ;
+
+/*This is used for set interval of automatic keys loading from server database*/
+var loadKeysIntervalTime = 5*60; //set time of keys to load, n*60 = in minutes
+var userIsLoaded = false; //if true frequentely load keys
+startLoadingKeysInterval(userIsLoaded); //initial call of repeating function
+
+//jquery selectors for inner text changing, only for CSS change
+//server texts
 var terminalServerUrl = $('.subblock-top .server-url');
 var terminalServerStatus = $('.subblock-top .server-status');
-
+//user texts
 var terminalInfoText = $('.subblock-center .info-text');
 var terminalUserName = $('.subblock-top .user');
 var terminalUserKey= $('.subblock-top .key');
-
 var terminalUserStatus = $('.subblock-top .user-status');
 var terminalUserHours = $('.subblock-top .user-hours');
-
+//in another mode
 var terminalButtonsInfoText = $('.subblock-center-buttons .info-text');
 
-terminal.loaderOn(); //run CSS/JS loader
+terminal.loaderOn(); //initial load, run CSS/JS loader inmediately
+console.log("repeat startLoadingKeysInterval function after: " +loadKeysIntervalTime/60+" minutes");
+console.log("autouserload is every: "+logoutTime+" seconds");
 
 var keysFromServer = function(){
     var user_keys;
@@ -35,12 +48,13 @@ var keysFromServer = function(){
         loadAll: function (loaduser){
             var that = this;
             //document.getElementById('online_status').innerHTML = "Loading Status";
+            terminalServerStatus.text("Loading status");
             URL = settings.URL + "/api/keys/";
             request({url:URL,headers:{"Authorization": "Token " + settings.TOKEN}},
                 function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         user_keys = JSON.parse(body);
-                        console.log("User keys loaded from server " + URL );
+                          console.log("User keys loaded from server " + URL );
                         terminal.loaderOff();
                         terminal.SystemCodeScan();
                         clearTimeout(cancel_timer_logout);
@@ -48,14 +62,14 @@ var keysFromServer = function(){
                         updateSwipeList();
                     }
                     else{
-                        console.log(body);
-                        console.log(error);
+                          console.log(body);
+                          console.log(error);
                         terminal.loaderOff();
                         terminal.SystemOffline();
                     }
                     //calls all users on log
-                    console.log("User keys are: ");
-                    console.log(that.getAll());
+                      console.log("User keys are: ");
+                      console.log(that.getAll());
 
                     if(loaduser){ // if we want to, we can loaduser immediately
                         that.loadUser(keyCodeReader.getCurrentKeyCode());
@@ -86,6 +100,9 @@ var keysFromServer = function(){
                     console.log("Loaded user: "); //PPR
                     console.log(current_user); //PPR
                     userstring.text("Key verified");
+                    userIsLoaded = true;
+                      console.log("user is loaded:" +userIsLoaded);
+                    startLoadingKeysInterval(userIsLoaded);
                     var status_string = getLastActionString(current_user.user.last_swipe.swipe_type);
                     if(status_string === "At Work"){ //PPR
                         //document.getElementById("status").style.color = "#1FD26A"; //PPR
@@ -103,18 +120,21 @@ var keysFromServer = function(){
                     clearInterval(cancel_timer_wrongKey); //must be cleared
                     switch(current_user.user.last_swipe.swipe_type){
                       case "IN" : terminal.btnShowAfterIN();  break;
-                      case "OUT": terminal.btnShowIN(); break;
+                      case "OUT": terminal.btnShowIN();       break;
                       case "OBR": terminal.btnShowBreakRet(); break;
-                      case "FBR": terminal.btnShowAfterIN(); break;
-                      case "OTR": terminal.btnShowTripRet(); break;
-                      case "FTR": terminal.btnShowAfterIN(); break;
-                      case undefined: terminal.btnShowIN(); break;
-                    default: console.log("Error default"); break;
+                      case "FBR": terminal.btnShowAfterIN();  break;
+                      case "OTR": terminal.btnShowTripRet();  break;
+                      case "FTR": terminal.btnShowAfterIN();  break;
+                      case undefined: terminal.btnShowIN();   break;
+                    default: console.log("Error default");    break;
                   }
-                  cancel_timer_logout = setTimeout(function() {
-                       logOut();
-                       clearTimeout(cancel_timer_wrongKey);
-                    },(logoutTime+1.5)*1000)
+                  //this timeout loggsout current user
+                    cancel_timer_logout = setTimeout(function() {
+                        logOut(); //logout - only as screen
+                        keysFromServer.unloadUser(); //unload loaded user
+                        setInterval(clear_Interval_loadAll);
+                        clearTimeout(cancel_timer_wrongKey); //clear timeout for wrong key message
+                     },(logoutTime+1.5)*1000) //logout in logout time + 1.5 sec - to show logout message
                 }
                 else {
                     current_user = undefined;
@@ -128,13 +148,17 @@ var keysFromServer = function(){
                 }
             }
             else{
-                alert("Server is offline. Use pen and paper :)")
+                //alert("Server is offline. Use pen and paper :)");
+                alert("Server is offline. Something is wrong, please contact administrators");
             }
 
         },
         getUser: function(){return current_user;},
         unloadUser: function(){
             current_user = undefined;
+            userIsLoaded = false;
+              console.log("user is loaded:" +userIsLoaded);
+              startLoadingKeysInterval(userIsLoaded);
             clearTimeout(cancel_timer_logout);
             clearTimeout(cancel_timer_wrongKey);
         }
@@ -145,7 +169,19 @@ keysFromServer.loadAll(false);//initial call, just load all keys on startup
 
 //update keys every minute just to get ONline status
 //should be somehow change so we dont have to transmit so often
-setInterval('keysFromServer.loadAll(false)', 60000); //PPR 60sec keyinterval, jen pro update keys
+function startLoadingKeysInterval(userIsLoaded) {
+  if(userIsLoaded == false) {
+    clear_Interval_loadAll = setInterval(function () {
+      keysFromServer.loadAll(false);
+      console.log("Starting to load database");
+    }, loadKeysIntervalTime*1000);
+  } else
+  if(userIsLoaded == true){
+    clearInterval(clear_Interval_loadAll);
+  }
+}
+
+
 
 /* Loading keycodes from local reader
  */
