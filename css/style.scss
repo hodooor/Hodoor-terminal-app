@@ -2,6 +2,8 @@ $black: #000;
 $white: #fff;
 $primary: #00AEEF;
 $danger: #E74121;
+$info: yellow;
+$success: lighten(#00AD1A, 15%);
 
 @font-face {
     font-family: myFont;
@@ -19,6 +21,18 @@ h1 {
 
 .danger {
   color: $danger;
+}
+
+.primary {
+  color: $primary;
+}
+
+.success {
+  color: $success;
+}
+
+.info {
+  color: $info;
 }
 
 #block-offline {
@@ -55,11 +69,20 @@ h1 {
 }
 
 #block-codescan {
+  //transition: 0.8s;
   background: none;
   .subblock-top {
     height: 50px;
     font-size: 14px;
+    table tr td {
+      width: 170px;
+    }
+    .table-bordered {
+      border-left: 1px solid #ccc;
+      padding-left: 3px;
+    }
     #sliding-menu {
+      cursor: pointer;
       text-align: center;
       position: absolute;
       z-index: 2;
@@ -76,11 +99,12 @@ h1 {
     }
   }
   .subblock-center {
+    //transition: 0.8s;
     margin-top: 25px;
     text-align: center;
     padding: none;
     margin: none;
-    .codescan-text{
+    .info-text{
       color: $primary;
       font-size: 42px;
       padding: none;
@@ -103,6 +127,77 @@ h1 {
       display: block;
     }
   }
+  .subblock-center-buttons {
+    //transition: 0.8s;
+    .button-block {
+      width: 100%;
+      text-align: center;
+      .button {
+        width: 150px;
+        height: 75px;
+        display: inline-block;
+        padding: 10px;
+        margin: 15px;
+        border: 3px solid $white;
+        text-decoration: none;
+        text-align: center;
+        color: $white;
+        background: lighten($primary,5%);
+        font-size: 30px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:hover, &:focus {
+          border-color: $primary;
+          //background: lighten($primary,5%);
+          background: none;
+          color: $primary;
+        }
+      }
+    }
+    .info-text {
+      text-align: center;
+      color: $white;
+      font-size: 23px;
+      padding: none;
+      margin: none;
+      display: block;
+      margin-bottom: 25px;
+      margin-top: 35px;
+    }
+    .info-text-inline {
+      text-align: center;
+      color: $white;
+      font-size: 23px;
+      padding: none;
+      margin: none;
+      display: block;
+      margin-top: 25px;
+    }
+    .button-danger {
+      width: 575px;
+      height: 30px;
+      display: inline-block;
+      padding: 10px;
+      padding-top: 0px;
+      position: absolute;
+      left: 78px;
+      margin: 15px;
+      border: 3px solid $danger;
+      text-decoration: none;
+      text-align: center;
+      color: $white;
+      background: lighten($danger,5%);
+      font-size: 30px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &:hover, &:focus {
+        border-color: $white;
+        //background: lighten($danger,5%);
+        color: $danger;
+        background: none;
+      }
+    }
+  }
 }
 .sidenav {
     height: 100vh;
@@ -118,23 +213,27 @@ h1 {
     padding-top: 60px;
     #last-swipes-content {
       display: none;
+      overflow: hidden;
     }
     .last-swipes-heading {
       font-size: 28px;
       padding-left: 25px;
     }
     .last-swipes-list {
-      margin-top: 30px;
-      height: 280px;
+      margin-top: 45px;
+      height: 420px; //was 280
       max-height: 280px !important;
       list-style-type: none;
       font-size: 16px;
       color: #ccc;
+      li {
+        padding-bottom: 7px;
+      }
     }
     .hide-last-swipes-after {
       color: #aaa;
       position: absolute;
-      bottom: 40px;
+      bottom: 40px; //was 40
       right: 55px;
       text-align: center;
     }
