@@ -5,16 +5,6 @@
   <title>Hodoor RasPi Terminal</title>
   <link rel="stylesheet" type="text/css" href="css/style.min.css" />
   <link rel="stylesheet" type="text/css" href="modules/fontawesome/css/font-awesome.min.css" />
-  <!-- Insert this line above script imports  -->
-  <script>if (typeof module === 'object')
-    {
-      window.module = module; module = undefined;
-    }
-  </script>
-  <!-- normal script imports etc  -->
-  <script src="js/jquery-3.1.1.min.js"></script>
-  <!-- Insert this line after script imports -->
-  <script>if (window.module) module = window.module;</script>
 </head>
 <body>
 <div id="loader" class="loader"></div>
@@ -81,8 +71,15 @@
 
     <div class="subblock-center">
       <span class="info-text">Scan your code please...</span>
-      <span class="time">15:48:05</span>
-      <span class="date">Tue 21.03.2017</span>
+      <div class="weather-block">
+        <span class="icon"><i class='fa'></i></span>
+        <span class="text">Temp</span>
+        <span class="location">Region</span>
+      </div>
+      <div class="info-block">
+        <span class="time">15:48:05</span>
+        <span class="date">Tue 21.03.2017</span>
+      </div>
     </div>
 
     <div class="subblock-center-buttons">
@@ -124,15 +121,11 @@
          sec.
       </span>
       <a id="btnEXIT" href="#" class="button-danger exit-button">Exit</a>
-
     </div>
-
   </div>
-
 </div>
 </body>
 <script>
-  require('./renderer.js');
   require('./index.js');
 </script>
 </html>

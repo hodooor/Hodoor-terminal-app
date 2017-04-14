@@ -5,6 +5,71 @@ const settings = require("./settings.json"); //parse settings to get data
 const terminal = require('./js/functions.js');
 const $ = require('jquery');
 
+/*if(settings.WEATHER_MODULE_ENABLED) {
+  const weatherX = require('./modules/simpleweather/jquery.simpleWeather.js')
+  console.info("Weather Module enabled");
+  //some script here
+  $(document).ready(function() {
+  $.simpleWeather({
+    location: 'Austin, TX',
+    woeid: '',
+    unit: 'f',
+    success: function(weather) {
+      html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
+      html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
+      html += '<li class="currently">'+weather.currently+'</li>';
+      html += '<li>'+weather.wind.direction+' '+weather.wind.speed+' '+weather.units.speed+'</li></ul>';
+
+      $("#weather").html(html);
+    },
+    error: function(error) {
+      $("#weather").html('<p>'+error+'</p>');
+    }
+  });
+  });
+}*/
+var weather = require('weather-js');
+const weatherBlockTempText = [
+  $('.weather-block .icon i'),
+  $('.weather-block .text'),
+  $('.weather-block .location')
+];
+
+const city = settings.CITY;
+const country = settings.COUNTRY;
+const temperatureUnit = settings.UNIT;
+
+weather.find({
+  search: city,
+  degreeType: temperatureUnit
+}, function(err, result) {
+    if(err) {
+      console.log(err);
+    } else {
+      //console.log(JSON.stringify(result, null, 2));
+      //console.log(result);
+      console.info("Weather was updated");
+      var temperature = (result[0].current.temperature);
+      var feelslike = (result[0].current.feelslike);
+      var region = (result[0].location.name);
+      var skycode = (result[0].current.skycode);
+      var skytext = (result[0].current.skytext);
+      console.log(skytext);
+      switch(skytext){
+          case "Clear"    :    skytext = "fa-sun-o"; break;
+          case "Cloudy"   :    skytext = "fa-cloud"; break;
+          case "Sunny"    :    skytext = "fa-sun-o"; break;
+          case "Snow"     :    skytext = "fa-snowflake-o"; break;
+          default         :    skytext = "fa-thermometer-three-quarters"; break;
+      }
+      weatherBlockTempText[0].addClass(skytext);
+      weatherBlockTempText[1].text(temperature +" °C" );
+      weatherBlockTempText[2].text(region);
+    }
+  }
+);
+
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 /*internal constants setting*/
@@ -298,23 +363,23 @@ $('#btnEXIT').on('click', function(){ //bad, use OVIs original
 //mamages different user work-statuses
 function getLastActionString(shorcut){
     switch(shorcut){
-        case "IN":    return "At Work";
-        case "OUT":   return "Out of Work";
-        case "OBR":   return "On Break";
-        case "FBR":   return "At Work";
-        case "OTR":   return "On Work Trip";
-        case "FTR":   return "At Work";
+        case "IN":    return "At Work";       break;
+        case "OUT":   return "Out of Work";   break;
+        case "OBR":   return "On Break";      break;
+        case "FBR":   return "At Work";       break;
+        case "OTR":   return "On Work Trip";  break;
+        case "FTR":   return "At Work";       break;
     }
 }
 //manages different swipe images (fontawesome icons)
 function getSwipeTypeIcon(swipe_type){ //Update swipe icons depended on swipe type
     switch(swipe_type){
-        case "IN":    return "fa-sign-in";
-        case "OUT":   return "fa-sign-out";
-        case "OBR":   return "fa-coffee";
-        case "FBR":   return "fa-clock-o";
-        case "OTR":   return "fa-suitcase";
-        case "FTR":   return "fa-share-square";
+        case "IN":    return "fa-sign-in";       break;
+        case "OUT":   return "fa-sign-out";      break;
+        case "OBR":   return "fa-coffee";        break;
+        case "FBR":   return "fa-clock-o";       break;
+        case "OTR":   return "fa-suitcase";      break;
+        case "FTR":   return "fa-share-square";  break;
     }
 }
 
