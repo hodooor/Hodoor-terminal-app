@@ -68,7 +68,7 @@ exports.SystemOffline = SystemOffline;
 
 var autoLogoutAfter;
 var autoLogoutAfterTimeInterval;
-function SystemCodeOK(autoLogoutAfter) {
+function SystemCodeOK() {
   console.log('I am in code scaned DONE mode');
     $('#block-offline').hide();
     $('#sliding-menu').show();
@@ -76,7 +76,7 @@ function SystemCodeOK(autoLogoutAfter) {
     $('#block-codescan .subblock-center').hide();
     $('#block-codescan .subblock-center-buttons').fadeIn('slow');
     $('.code-activated').show();
-    $('.info-text-inline').hide();
+    //$('.info-text-inline').hide();
     $('.code-activated').addClass('table-bordered');
     /*if(autoLogoutAfter != 'none') {
       autoLogoutAfterTimeInterval = setInterval(function () {
@@ -85,7 +85,6 @@ function SystemCodeOK(autoLogoutAfter) {
         if (autoLogoutAfter == -1) {
           clearInterval(autoLogoutAfterTimeInterval);
           console.log('going to scan mode');
-          return SystemCodeScan();
         }
       }, 1000);
     }*/
