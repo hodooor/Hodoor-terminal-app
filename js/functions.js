@@ -71,6 +71,7 @@ var autoLogoutAfterTimeInterval;
 function SystemCodeOK(autoLogoutAfter) {
   console.log('I am in code scaned DONE mode');
     $('#block-offline').hide();
+    $('#sliding-menu').show();
     $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center').hide();
     $('#block-codescan .subblock-center-buttons').fadeIn('slow');
@@ -96,6 +97,7 @@ var SystemCodeScan = function() {
   console.log('I am in code scan mode');
   resetAll();
     $('#block-offline').hide();
+    $('#sliding-menu').show();
     $('#block-codescan').fadeIn('slow');
     $('#block-codescan .subblock-center-buttons').hide();
     $('#block-codescan .subblock-center').fadeIn('slow');

@@ -1,4 +1,9 @@
 {
 	"URL" : "http://127.0.0.1:8000",
-	"TOKEN" : "4d36d0a6e802effdfd8254e1cea24ba9f16b61eb" 
+	"TOKEN" : "4d36d0a6e802effdfd8254e1cea24ba9f16b61eb",
+	"WHEATER_MODULE_ENABLED" : "true",
+	"CITY" : "Brno",
+	"COUNTRY" : "CS",
+	"AUTO_LOAD_SEC" : 60,
+	"AUTO_USER_LOGOUT_TIME_SEC" : 15
 }

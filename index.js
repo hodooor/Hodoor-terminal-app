@@ -1,13 +1,12 @@
 const request = require('request');
 const fs = require('fs');
-const settings = require("./settings.json"); //for token and url get
+const settings = require("./settings.json"); //parse settings to get data
 const terminal = require('./js/functions.js');
 const $ = require('jquery');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const swipelen = 10; //nuber of swipes to see in left sliding list
-const logoutTime = 5; //n-sec to automatic user logout and also user unload
 const textDisplayDelay = 2; //n-sec to text value hold
 
 //timers
@@ -17,7 +16,8 @@ var cancel_timer_logout,
     ;
 
 /*This is used for set interval of automatic keys loading from server database*/
-const loadKeysIntervalTime = 1*60; //set time of keys to load, n*60 = in minutes
+const logoutTime = settings.AUTO_USER_LOGOUT_TIME_SEC; //n-sec to automatic user logout and also user unload
+const loadKeysIntervalTime = settings.AUTO_LOAD_SEC; //set time of keys to load, n*60 = in minutes
 var userIsLoaded = false; //if true frequentely load keys
 startLoadingKeysInterval(userIsLoaded); //initial call of repeating function
 
@@ -38,7 +38,7 @@ const displayButtonsBlock = $('.subblock-center-buttons');
 terminal.loaderOn(); //initial load, run CSS/JS loader inmediately
 
 console.info("repeat startLoadingKeysInterval function after: " +loadKeysIntervalTime/60+" minutes");
-console.info("autouserload is every: "+logoutTime+" seconds");
+console.info("autouserlogout is every: "+logoutTime+" seconds");
 
 var keysFromServer = function(){
     var user_keys;
@@ -249,53 +249,6 @@ function swipeSender(swipe_type){
     }
 }
 
-/*
-function disableAllButtons(){
-
-    BUTTONS = ["incom","outgo","break","break_ret","trip","trip_ret","cancel"];
-
-    for(var i=0; i < BUTTONS.length; i++){
-        disableButton(BUTTONS[i]);
-    }
-}
-
-function enableAllButtons(){
-    BUTTONS = ["incom","outgo","break","break_ret","trip","trip_ret","cancel"];
-    for(var i=0; i < BUTTONS.length; i++){
-        enableButton(BUTTONS[i]);
-    }
-}
-
-function disableButton(button){
-    ICON_PREFIX = "but_";
-    ICON_POSTFIX = "_icon";
-    DISABLE_OPACITY = 0.2;
-
-    b = document.getElementById(button);
-    b.disabled = true;
-    i = document.getElementById(ICON_PREFIX+button+ICON_POSTFIX);
-    i.style.opacity = DISABLE_OPACITY;
-}
-
-function enableButton(button){
-    ICON_PREFIX = "but_";
-    ICON_POSTFIX = "_icon";
-    ENABLE_OPACITY = 1;
-
-    b = document.getElementById(button);
-    b.disabled = false;
-    i = document.getElementById(ICON_PREFIX+button+ICON_POSTFIX);
-    i.style.opacity = ENABLE_OPACITY;
-}
-
-function enableButtons(buttons){
-    for(var i=0; i < buttons.length; i++){
-        enableButton(buttons[i]);
-    }
-}
-disableAllButtons();
-*/
-
 //Just buttons actions
 $('#btnIN').on('click', function(){
     clearTimeout(cancel_timer_logout);
@@ -423,7 +376,7 @@ function getUserName(user_id){
     if(keys){
         for(var i= 0; i < keys.length; i++){
             if(keys[i].user.id === user_id){
-                return keys[i].user.username
+                return keys[i].user.username;
             }
         }
     }
@@ -445,7 +398,6 @@ $(".server-url").text(settings.URL.split("//")[1]);
 function logOut(){
     terminalButtonsInfoText.text('Logging out...');
     setTimeout(function(){
-        //resetAll();
         terminal.SystemCodeScan();
     },500)
 }
