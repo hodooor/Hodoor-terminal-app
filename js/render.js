@@ -76,18 +76,7 @@ function SystemCodeOK() {
     $('#block-codescan .subblock-center').hide();
     $('#block-codescan .subblock-center-buttons').fadeIn('slow');
     $('.code-activated').show();
-    //$('.info-text-inline').hide();
     $('.code-activated').addClass('table-bordered');
-    /*if(autoLogoutAfter != 'none') {
-      autoLogoutAfterTimeInterval = setInterval(function () {
-        $('.logout-time-text').text(autoLogoutAfter--);
-        $('.info-text-inline').show();
-        if (autoLogoutAfter == -1) {
-          clearInterval(autoLogoutAfterTimeInterval);
-          console.log('going to scan mode');
-        }
-      }, 1000);
-    }*/
 }
 exports.SystemCodeOK = SystemCodeOK;
 

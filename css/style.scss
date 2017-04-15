@@ -6,14 +6,14 @@ $info: yellow;
 $success: lighten(#00AD1A, 15%);
 
 @font-face {
-    font-family: myFont;
-    src: url(../fonts/OpenSans-Regular.ttf);
+    font-family: OpenSans;
+    src: url(../font/OpenSans-Regular.ttf);
 }
 
 body {
   background: $black;
   color: $white;
-  font-family: myFont;
+  font-family: OpenSans;
 }
 h1 {
   color: $primary;
@@ -117,28 +117,31 @@ h1 {
       width: 40%;
       position: absolute;
       left: 0px;
+      margin-top: 22px;
       border-right: 1px solid #ccc;
       .icon {
-        width: 100%;
+        //width: 100%;
         display: inline-block;
         //background: yellow;
         text-align: center;
-        font-size: 72px;
-        margin-top: -10px;
+        font-size: 60px;
+        //margin-top: -10px;
       }
       .text {
-        width: 100%;
+        //width: 100%;
         display: inline-block;
-        margin-top: -5px;
-      //background: magenta;
+        //margin-top: -5px;
+        //background: magenta;
+        padding-left: 10px;
         text-align: center;
-        font-size: 60px;
+        font-size: 72px;
       }
       .location {
-        font-size: 16px;
+        font-size: 20px;
         color: #ddd;
         //background: red;
         width: 100%;
+        margin-top: 15px;
         text-align: center;
         display: inline-block;
       }

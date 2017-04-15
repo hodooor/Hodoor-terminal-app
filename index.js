@@ -2,73 +2,8 @@
 const request = require('request');
 const fs = require('fs');
 const settings = require("./settings.json"); //parse settings to get data
-const terminal = require('./js/functions.js');
+const terminal = require('./js/render.js');
 const $ = require('jquery');
-
-/*if(settings.WEATHER_MODULE_ENABLED) {
-  const weatherX = require('./modules/simpleweather/jquery.simpleWeather.js')
-  console.info("Weather Module enabled");
-  //some script here
-  $(document).ready(function() {
-  $.simpleWeather({
-    location: 'Austin, TX',
-    woeid: '',
-    unit: 'f',
-    success: function(weather) {
-      html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
-      html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
-      html += '<li class="currently">'+weather.currently+'</li>';
-      html += '<li>'+weather.wind.direction+' '+weather.wind.speed+' '+weather.units.speed+'</li></ul>';
-
-      $("#weather").html(html);
-    },
-    error: function(error) {
-      $("#weather").html('<p>'+error+'</p>');
-    }
-  });
-  });
-}*/
-var weather = require('weather-js');
-const weatherBlockTempText = [
-  $('.weather-block .icon i'),
-  $('.weather-block .text'),
-  $('.weather-block .location')
-];
-
-const city = settings.CITY;
-const country = settings.COUNTRY;
-const temperatureUnit = settings.UNIT;
-
-weather.find({
-  search: city,
-  degreeType: temperatureUnit
-}, function(err, result) {
-    if(err) {
-      console.log(err);
-    } else {
-      //console.log(JSON.stringify(result, null, 2));
-      //console.log(result);
-      console.info("Weather was updated");
-      var temperature = (result[0].current.temperature);
-      var feelslike = (result[0].current.feelslike);
-      var region = (result[0].location.name);
-      var skycode = (result[0].current.skycode);
-      var skytext = (result[0].current.skytext);
-      console.log(skytext);
-      switch(skytext){
-          case "Clear"    :    skytext = "fa-sun-o"; break;
-          case "Cloudy"   :    skytext = "fa-cloud"; break;
-          case "Sunny"    :    skytext = "fa-sun-o"; break;
-          case "Snow"     :    skytext = "fa-snowflake-o"; break;
-          default         :    skytext = "fa-thermometer-three-quarters"; break;
-      }
-      weatherBlockTempText[0].addClass(skytext);
-      weatherBlockTempText[1].text(temperature +" °C" );
-      weatherBlockTempText[2].text(region);
-    }
-  }
-);
-
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -80,7 +15,8 @@ const textDisplayDelay = 2; //n-sec to text value hold
 var cancel_timer_logout,
     cancel_timer_wrongKey,
     clear_Interval_loadAll,
-    clear_interval_user_logout
+    clear_interval_user_logout,
+    clear_Interval_getWeatherInfo
     ;
 
 /*This is used for set interval of automatic keys loading from server database*/
@@ -455,4 +391,61 @@ function logOut(){
     setTimeout(function(){
         terminal.SystemCodeScan();
     },500)
+}
+
+/*MODULES*/
+if(settings.WEATHER_MODULE_ENABLED) {
+  var getWeatherInfo = function() {
+    var weather = require('weather-js');
+    const weatherBlockTempText = [
+      $('.weather-block .icon i'),
+      $('.weather-block .text'),
+      $('.weather-block .location')
+    ];
+
+    const city = settings.CITY;
+    const country = settings.COUNTRY;
+    const temperatureUnit = settings.UNIT;
+
+    weather.find({
+      search: city,
+      degreeType: temperatureUnit
+      }, function(err, result) {
+          if(err) {
+            console.log(err);
+          } else {
+            console.info("Weather was updated");
+            var temperature = (result[0].current.temperature);
+            var feelslike = (result[0].current.feelslike);
+            var region = (result[0].location.name);
+            var skycode = (result[0].current.skycode);
+            var skytext = (result[0].current.skytext);
+            console.log(skytext);
+            switch(skytext){
+                case "Clear"        :    skytext = "wi-horizon-alt"; break;
+                case "Cloudy"       :    skytext = "wi-cloudy"; break;
+                case "Sunny"        :    skytext = "wi-day-sunny"; break;
+                case "Snow"         :    skytext = "wi-day-snow"; break;
+                case "Thunderstorm" :    skytext = "wi-thunderstorm"; break;
+                case "Rain"         :    skytext = "wi-day-sleet"; break;
+                case "Showers"      :    skytext = "wi-showers"; break;
+                case "Windy"        :    skytext = "wi-day-windy"; break;
+                default             :    skytext = "wi-thermometer"; break;
+            }
+            weatherBlockTempText[0].addClass(skytext);
+            weatherBlockTempText[1].text(temperature +" °C" );
+            weatherBlockTempText[2].text(region);
+          }
+        }
+      );
+    }
+  getWeatherInfo(); //initial call
+  clear_Interval_getWeatherInfo = setInterval(function () {
+    console.info("Repeating getWeatherInfo every: "+settings.WEATHER_REFRESH_TIME_SEC+" seconds");
+    getWeatherInfo(); //call this function frequentelly
+  }, settings.WEATHER_REFRESH_TIME_SEC*1000); //how often depends on settings
+} else {
+  clearInterval(clear_Interval_getWeatherInfo);
+  $('.subblock-center .weather-block').hide();
+  $('.subblock-center .info-block').css('width', '100%');
 }
