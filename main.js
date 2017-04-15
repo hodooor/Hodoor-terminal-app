@@ -42,6 +42,7 @@ function createWindow () {
             width: 800,
             height: 480,
             resizable: false,
+            icon:'img/favicon.ico',
             x: 0,
             y:0,
             useContentSize: false,
