@@ -1,21 +1,23 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "Hodoor-client-terminal-app",
+  "version": "2.0.0",
+  "description": "Based on electron and JQuery",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/patriczek2811/Hodoor-terminal-app",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Hodoor",
+    "client",
+    "terminal",
+    "casual",
+    "attendance",
+    "system"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Ondrej.Vicar and Patrik.Predny",
+  "license": "MIT",
   "devDependencies": {
     "electron": "~1.6.2"
   }
