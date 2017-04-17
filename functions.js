@@ -429,6 +429,7 @@ if(settings.WEATHER_MODULE_ENABLED) {
                 case "Thunderstorm" :    skytext = "wi-thunderstorm"; break;
                 case "Rain"         :    skytext = "wi-day-sleet"; break;
                 case "Showers"      :    skytext = "wi-showers"; break;
+                case "Rain Showers" :    skytext = "wi-showers"; break;
                 case "Windy"        :    skytext = "wi-day-windy"; break;
                 default             :    skytext = "wi-thermometer"; break;
             }
