@@ -1,6 +1,6 @@
 /*SETTINGS*/
 const request = require('request');
-const fs = require('fs');
+//const fs = require('fs');
 const settings = require("./settings.json"); //parse settings to get data
 const terminal = require('./js/render.js');
 const $ = require('jquery');
@@ -41,7 +41,7 @@ const displayButtonsBlock = $('.subblock-center-buttons');
 const displayLogoutTime = $('.subblock-center-buttons .info-text-inline .logout-time-text');
 /*INITIAL CALLS*/
 terminal.loaderOn(); //initial load, run CSS/JS loader inmediately
-$(".server-url").text(settings.URL.split("//")[1]); //load server settings to element
+terminalServerUrl.text(settings.URL.split("//")[1]); //load server settings to element
 displayLogoutTime.text(logoutTimeText); //initial display this value
 
 console.info("Auto terminal load time is set to: " +loadKeysIntervalTime+" seconds");
