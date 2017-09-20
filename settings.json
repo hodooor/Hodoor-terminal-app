@@ -1,9 +1,9 @@
 {
-	"URL" : "http://127.0.0.1:8000",
-	"TOKEN" : "4d36d0a6e802effdfd8254e1cea24ba9f16b61eb",
+	"URL" : "",
+	"TOKEN" : "",
 	"WEATHER_MODULE_ENABLED" : true,
 	"WEATHER_REFRESH_TIME_SEC" : 300,
-	"CITY" : "Brno",
+	"CITY" : "",
 	"COUNTRY" : "CZ",
 	"UNIT" : "C",
 	"AUTO_TERMINAL_LOAD_SEC" : 60,
